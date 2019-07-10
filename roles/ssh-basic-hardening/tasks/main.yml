@@ -1,0 +1,23 @@
+---
+# tasks file for ssh-basic-hardening
+- name: Update SSH configuration to be more secure.
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+    - regexp: "^Port"
+      line: "Port {{ ssh_port }}"
+  notify: restart ssh
+
+- name: change ssh port in inventory
+  local_action:
+    module: lineinfile
+    dest: "{{ inventory_file }}"
+    insertafter: '[all:vars]'
+    line: 'ansible_ssh_port="{{ ssh_port }}"'

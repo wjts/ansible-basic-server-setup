@@ -1,0 +1,23 @@
+---
+# tasks file for custom-user
+- name: Add custom user
+  user:
+    name: "{{ ssh_user }}"
+
+- name: Set authorized key for custom user copying it from current user
+  authorized_key:
+    user: "{{ ssh_user }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+- name: Add sudo group rights for deployment user.
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ ssh_user }}'
+    line: '{{ ssh_user }} ALL=(ALL) NOPASSWD: ALL'
+    state: present
+  
+- name: Lock current user out
+  user:
+    name: "{{ ansible_user }}"
+    password_lock: true

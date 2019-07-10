@@ -1,0 +1,100 @@
+---
+# tasks file for zsh-with-plugins
+- name: Install zsh shell
+  package: name={{ item }} state=present
+  with_items:
+    - git
+    - zsh
+
+- name: Change default shell
+  user: 
+    name: "{{ ssh_user }}"
+    shell: /usr/bin/zsh
+
+- name: Install oh-my-zsh
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: "~{{ ssh_user }}/.oh-my-zsh"
+
+- name: Check if ~/.zshrc exists
+  stat:
+    path: "~{{ ssh_user }}/.zshrc"
+  register: zshrc_file
+
+- name: Creating new ~/.zshrc
+  copy:
+    src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+    dest: "~{{ ssh_user }}/.zshrc"
+  when: not zshrc_file.stat.exists
+
+- name: Change default theme to bira
+  lineinfile:
+    path: "~{{ ssh_user }}/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME=bira'
+  when: not zshrc_file.stat.exists
+
+- name: add zsh-completions
+  git:
+    repo: https://github.com/zsh-users/zsh-completions
+    dest: "~{{ ssh_user }}/.oh-my-zsh/custom/plugins/zsh-completions"
+  when: not zshrc_file.stat.exists
+
+- name: turn on zsh-completions
+  lineinfile:
+    path: "~{{ ssh_user }}/.zshrc"
+    regexp: '^plugins=\(([^\)]+)\)'
+    line: 'plugins=(\1 zsh-completions)'
+    backrefs: yes
+  when: not zshrc_file.stat.exists
+
+- name: add zsh-autosuggestions
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: "~{{ ssh_user }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+  when: not zshrc_file.stat.exists
+
+- name: turn on zsh-autosuggestions
+  lineinfile:
+    path: "~{{ ssh_user }}/.zshrc"
+    regexp: '^plugins=\(([^\)]+)\)'
+    line: 'plugins=(\1 zsh-autosuggestions)'
+    backrefs: yes
+  when: not zshrc_file.stat.exists
+
+- name: add zsh-syntax-highlighting
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "~{{ ssh_user }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+  when: not zshrc_file.stat.exists
+
+- name: turn on zsh-syntax-highlighting
+  lineinfile:
+    path: "~{{ ssh_user }}/.zshrc"
+    regexp: '^plugins=\(([^\)]+)\)'
+    line: 'plugins=(\1 zsh-syntax-highlighting)'
+    backrefs: yes
+  when: not zshrc_file.stat.exists
+
+- name: add history-search-multi-word
+  git:
+    repo: https://github.com/zdharma/history-search-multi-word.git
+    dest: "~{{ ssh_user }}/.oh-my-zsh/custom/plugins/history-search-multi-word"
+  when: not zshrc_file.stat.exists
+
+- name: turn on history-search-multi-word
+  lineinfile:
+    path: "~{{ ssh_user }}/.zshrc"
+    regexp: '^plugins=\(([^\)]+)\)'
+    line: 'plugins=(\1 history-search-multi-word)'
+    backrefs: yes
+  when: not zshrc_file.stat.exists
+
+- name: Change oh-my-zsh ownership
+  file:
+    path: "~{{ ssh_user }}/.oh-my-zsh"
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    recurse: yes
+  when: not zshrc_file.stat.exists

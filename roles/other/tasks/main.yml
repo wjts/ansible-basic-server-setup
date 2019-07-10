@@ -1,0 +1,7 @@
+---
+# tasks file for other
+- name: Configure global bash history timestamp
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    line: 'export HISTTIMEFORMAT="%Y-%m-%d %T "'

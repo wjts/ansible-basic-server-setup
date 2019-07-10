@@ -1,0 +1,20 @@
+---
+# tasks file for docker
+- name: Download docker installer
+  get_url:
+    url: https://get.docker.com
+    dest: /root/get-docker.sh
+
+- name: Install docker
+  shell: >
+    sh /root/get-docker.sh
+    creates=/usr/bin/docker
+
+- name: Add {{ ssh_user }} to the docker group
+  user:
+    name: "{{ ssh_user }}"
+    group: docker
+    append: yes
+
+- name: Ensure docker is running and enabled on boot.
+  service: name=docker state=started enabled=yes

@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+
+  vars_files:
+    - vars.yml
+
+  roles:
+    - ssh-basic-hardening
+    - custom-user
+    - package-security
+    - firewall
+    - zsh-with-plugins
+    - other
+    - docker

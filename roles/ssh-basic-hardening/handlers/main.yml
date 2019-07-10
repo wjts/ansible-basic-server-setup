@@ -1,0 +1,11 @@
+---
+# handlers file for ssh-basic-hardening
+- name: restart ssh (Debian)
+  service: name=ssh state=restarted
+  listen: restart ssh
+  when: ansible_os_family == 'Debian'
+
+- name: restart ssh (RedHat)
+  service: name=sshd state=restarted
+  listen: restart ssh
+  when: ansible_os_family == 'RedHat'
