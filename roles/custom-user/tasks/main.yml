@@ -17,7 +17,7 @@
     line: '{{ ssh_user }} ALL=(ALL) NOPASSWD: ALL'
     state: present
   
-- name: Lock current user out
+- name: Lock root's password
   user:
-    name: "{{ ansible_user }}"
+    name: "root"
     password_lock: true

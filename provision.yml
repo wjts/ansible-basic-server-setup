@@ -11,5 +11,5 @@
     - package-security
     - firewall
     - zsh-with-plugins
-    - other
+    - logging
     - docker

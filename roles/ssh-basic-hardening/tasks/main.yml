@@ -1,6 +1,6 @@
 ---
 # tasks file for ssh-basic-hardening
-- name: Update SSH configuration to be more secure.
+- name: Disable password authentication and root login, change SSH port
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
