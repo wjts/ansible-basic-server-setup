@@ -51,3 +51,10 @@
 
 - name: Ensure fail2ban is running and enabled on boot.
   service: name=fail2ban state=started enabled=yes
+
+- name: Change fail2ban ssh port
+  lineinfile:
+    dest: /etc/fail2ban/jail.d/defaults-debian.conf
+    state: present
+    line: "port = {{ ssh_port }}"
+  notify: restart fail2ban

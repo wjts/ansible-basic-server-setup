@@ -10,11 +10,12 @@
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
-- name: Add sudo group rights for custom user.
-  user:
-    name: "{{ ssh_user }}"
-    group: sudo
-    append: yes
+- name: Add sudo group rights for deployment user.
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: '^{{ ssh_user }}'
+    line: '{{ ssh_user }} ALL=(ALL) NOPASSWD: ALL'
+    state: present
   
 - name: Lock root's password
   user:

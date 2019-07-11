@@ -13,7 +13,7 @@
 - name: Add {{ ssh_user }} to the docker group
   user:
     name: "{{ ssh_user }}"
-    group: docker
+    groups: docker
     append: yes
 
 - name: Ensure docker is running and enabled on boot.
