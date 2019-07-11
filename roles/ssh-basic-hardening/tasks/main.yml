@@ -1,6 +1,6 @@
 ---
 # tasks file for ssh-basic-hardening
-- name: Disable password authentication and root login, change SSH port
+- name: Disable password authentication and root login, change SSH port, enable PAM for loggins without password
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"
@@ -13,6 +13,8 @@
       line: "PermitRootLogin no"
     - regexp: "^Port"
       line: "Port {{ ssh_port }}"
+    - regexp: "^UsePAM"
+      line: "UsePAM yes"
   notify: restart ssh
 
 - name: change ssh port in inventory
