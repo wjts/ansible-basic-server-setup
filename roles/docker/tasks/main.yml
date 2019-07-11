@@ -21,10 +21,11 @@
 
 # @see https://www.techrepublic.com/article/how-to-fix-the-docker-and-ufw-security-flaw/
 # @see https://blog.viktorpetersson.com/2014/11/03/the-dangers-of-ufw-docker.html
-- name: Fix docker's iptables bug by disabling iptables in docker daemon
-  lineinfile:
-    dest: /etc/default/docker
-    regexp: "DOCKER_OPTS="
-    line: 'DOCKER_OPTS="--iptables=false"'
-  when: ansible_os_family == 'Debian'
+- name: Copy docker file config
+  template:
+    src: "../templates/daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0644
   notify: restart docker
