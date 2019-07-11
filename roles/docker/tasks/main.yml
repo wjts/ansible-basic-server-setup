@@ -18,3 +18,13 @@
 
 - name: Ensure docker is running and enabled on boot.
   service: name=docker state=started enabled=yes
+
+# @see https://www.techrepublic.com/article/how-to-fix-the-docker-and-ufw-security-flaw/
+# @see https://blog.viktorpetersson.com/2014/11/03/the-dangers-of-ufw-docker.html
+- name: Fix docker's iptables bug by disabling iptables in docker daemon
+  lineinfile:
+    dest: /etc/default/docker
+    regexp: "DOCKER_OPTS="
+    line: 'DOCKER_OPTS="--iptables=false"'
+  when: ansible_os_family == 'Debian'
+  notify: restart docker
