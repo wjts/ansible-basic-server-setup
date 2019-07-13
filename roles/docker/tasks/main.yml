@@ -18,14 +18,3 @@
 
 - name: Ensure docker is running and enabled on boot.
   service: name=docker state=started enabled=yes
-
-# @see https://www.techrepublic.com/article/how-to-fix-the-docker-and-ufw-security-flaw/
-# @see https://blog.viktorpetersson.com/2014/11/03/the-dangers-of-ufw-docker.html
-- name: Copy docker file config
-  template:
-    src: "../templates/daemon.json.j2"
-    dest: "/etc/docker/daemon.json"
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart docker
